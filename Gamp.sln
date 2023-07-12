@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gamp", "Gamp.csproj", "{7BE64141-64E6-4011-9DBD-129F3D9F1B5E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BE64141-64E6-4011-9DBD-129F3D9F1B5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BE64141-64E6-4011-9DBD-129F3D9F1B5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BE64141-64E6-4011-9DBD-129F3D9F1B5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BE64141-64E6-4011-9DBD-129F3D9F1B5E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D9B4C72-050B-407C-9EB9-72FD33F02EF5}
+	EndGlobalSection
+EndGlobal
