@@ -4,12 +4,12 @@ using Gamp.Dto;
 string apiSecret = GetEnvironmentVariable("API_SECRET");
 string measurementId = GetEnvironmentVariable("MEASUREMENT_ID");
 string clientId = GetEnvironmentVariable("CLIENT_ID");
-var supportedExchangeRateCodes = new[] { "EUR" };
+var supportedExchangeRateCodes = new[] { "EUR", "GBP", "PLN", "RSD" };
 
 var eventSender = new GoogleAnalyticsEventSender(apiSecret, measurementId, clientId);
 var exchangeRatesProvider = new ExchangeRatesProvider();
 
-var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
+var timer = new PeriodicTimer(TimeSpan.FromHours(1));
 
 do
 {
