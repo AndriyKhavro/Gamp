@@ -9,6 +9,7 @@ internal class GoogleAnalyticsEventSender
 {
     private readonly string _clientId;
     private Uri Endpoint { get; }
+    private Uri DebugEndpoint { get; }
     private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -16,9 +17,26 @@ internal class GoogleAnalyticsEventSender
 
     public GoogleAnalyticsEventSender(string apiSecret, string measurementId, string clientId)
     {
-        _clientId = clientId;
+        if (string.IsNullOrWhiteSpace(apiSecret))
+        {
+            throw new ArgumentException("API_SECRET must not be null, empty or whitespace", nameof(apiSecret));
+        }
 
-        Endpoint = new Uri($"https://www.google-analytics.com/mp/collect?api_secret={apiSecret}&measurement_id={measurementId}");
+        if (string.IsNullOrWhiteSpace(measurementId))
+        {
+            throw new ArgumentException("MEASUREMENT_ID must not be null, empty or whitespace", nameof(measurementId));
+        }
+
+        if (string.IsNullOrWhiteSpace(apiSecret))
+        {
+            throw new ArgumentException("CLIENT_ID must not be null, empty or whitespace", nameof(clientId));
+        }
+
+        _clientId = clientId;
+        const string baseUrl = "https://www.google-analytics.com";
+        string queryParams = $"?api_secret={apiSecret}&measurement_id={measurementId}";
+        Endpoint = new Uri($"{baseUrl}/mp/collect{queryParams}");
+        DebugEndpoint = new Uri($"{baseUrl}/debug/mp/collect{queryParams}");
     }
 
     public async Task<HttpResponseMessage> TrackEvents(IEnumerable<GoogleAnalyticsEvent> events)
@@ -30,9 +48,29 @@ internal class GoogleAnalyticsEventSender
         };
 
         using var httpClient = new HttpClient();
+
+        await EnsureRequestValid(httpClient);
+
         var response = await httpClient.PostAsJsonAsync(Endpoint, postData, JsonSerializerOptions);
         var responseString = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"Sent event. Response status code: {response.StatusCode}. Content: {responseString}");
         return response;
+
+        async Task EnsureRequestValid(HttpClient http)
+        {
+            var debugResponse = await http.PostAsJsonAsync(DebugEndpoint, postData, JsonSerializerOptions);
+            debugResponse.EnsureSuccessStatusCode();
+            var response = await debugResponse.Content.ReadFromJsonAsync<DebugResponse>();
+            if (response!.ValidationMessages.Any())
+            {
+                throw new InvalidOperationException(
+                    $"Found {response.ValidationMessages.Length} validation messages: {string.Join(',', response.ValidationMessages)}");
+            }
+        }
+    }
+
+    private class DebugResponse
+    {
+        public required object[] ValidationMessages { get; init; }
     }
 }
