@@ -9,7 +9,7 @@ var supportedExchangeRateCodes = new[] { "EUR", "GBP", "PLN", "RSD" };
 var eventSender = new GoogleAnalyticsEventSender(apiSecret, measurementId, clientId);
 var exchangeRatesProvider = new ExchangeRatesProvider();
 
-var timer = new PeriodicTimer(TimeSpan.FromDays(1));
+var timer = new PeriodicTimer(TimeSpan.FromHours(1));
 
 do
 {
